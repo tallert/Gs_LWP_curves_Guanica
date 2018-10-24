@@ -14,7 +14,9 @@ gslwp$MeanLWP_neg <- gslwp$MeanLWP * -1
 
 View(gslwp)
 
-#load ggplot2
+#load ggplot2 and plotly
+install.packages("plotly")
+library(plotly)
 
 #preliminary scatterplot for raw mean Gs as a function of raw mean LWP
 plot1 <- ggplot(gslwp, aes(x=MeanLWP_neg, y=MeanGs_mol, color = Species)) +geom_point()
@@ -33,6 +35,9 @@ str(gslwp_spring)
 #preliminary scatterplot for raw mean Gs as a function of raw mean LWP. SPRING ONLY
 plot2 <- ggplot(gslwp_spring, aes(x=MeanLWP_neg, y=MeanGs_mol, color = Species)) +geom_point()
 plot2
+
+#---------------------------------
+#RUTACEAE
 
 #produce scatterplot for Rutaceae only with smooth local regression ("loess" used as useful for small number of observations)
 gslwp_subset_Ruta <- subset(gslwp_spring, Family %in% c("Rutaceae")==TRUE)
@@ -70,6 +75,9 @@ plot_Ruta_Sp6
 plot_Ruta_Sp6 <- plot_Ruta_Sp6 + ggtitle("Stomatal conductance as a function of leaf water potential during the spring 2017 dry season \nSpecies in the Rutaceae family")
 plot_Ruta_Sp6
 
+#---------------------------------
+#BORAGINACEAE
+
 #produce scatterplot for Boraginaceae only with smooth local regression ("loess" used as useful for small number of observations)
 #first, add column for LWP in MPa in main Spring dataframe 
 gslwp_spring$MeanLWP_negMPa <- gslwp_spring$MeanLWP_neg /10
@@ -96,3 +104,43 @@ plot_Borag_Sp2 <- plot_Borag_Sp2 +xlab("Mean leaf water potential (MPa)")
 plot_Borag_Sp2 <- plot_Borag_Sp2 +ylab("Mean stomatal conductance (mol m-2 s-1)")
 plot_Borag_Sp3 <- plot_Borag_Sp2 + ggtitle("Stomatal conductance as a function of leaf water potential during the spring 2017 dry season \nSpecies in the Boraginaceae family")
 plot_Borag_Sp3
+
+#---------------------------------
+#COMBRETACEAE
+
+#produce scatterplot for Combretaceae only with smooth local regression ("loess" used as useful for small number of observations)
+#first, add column for LWP in MPa in main gslwp dataframe 
+gslwp$MeanLWP_negMPa <- gslwp$MeanLWP_neg /10
+#gslwp_spring$MeanLWP_negMPa <- NULL
+gslwp
+View(gslwp)
+
+#convert Interval and TreeNumber into factor variables
+gslwp$Interval <- factor(gslwp$Interval)
+gslwp$TreeNumber <- factor(gslwp$TreeNumber)
+
+#subset Combretaceae family
+gslwp_subset_Combret <- subset(gslwp, Family %in% c("Combretaceae")==TRUE)
+View(gslwp_subset_Combret)
+
+str(gslwp_subset_Combret)
+
+#create scatterplot
+plot_Combret <- ggplot(gslwp_subset_Combret, aes(MeanLWP_negMPa, MeanGs_mol, color = TreeNumber, shape = Season)) +
+  geom_point() + geom_smooth(se=F)
+rm(plot_Combret)
+warnings()
+
+#color == TreeNumber
+#shape == Season
+#points included
+#regression (loess) lines for each TreeNumber
+
+plot_Combret <- ggplot(data=gslwp_subset_Combret, aes(x=MeanLWP_negMPa, y=MeanGs_mol, colour=factor(TreeNumber)))
+plot + stat_smooth(method=lm, fullrange=FALSE) + geom_point()
+
+plot_Combret <- ggplot(gslwp_subset_Combret) + 
+  geom_jitter(aes(MeanLWP_negMPa,MeanGs_mol), colour="blue") + geom_smooth(aes(disp,mpg), method=lm, se=FALSE) +
+  geom_jitter(aes(hp,mpg), colour="green") + geom_smooth(aes(hp,mpg), method=lm, se=FALSE) +
+  geom_jitter(aes(qsec,mpg), colour="red") + geom_smooth(aes(qsec,mpg), method=lm, se=FALSE) +
+  labs(x = "Percentage cover (%)", y = "Number of individuals (N)")
