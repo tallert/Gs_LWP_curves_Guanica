@@ -49,7 +49,7 @@ plot_Ruta_Sp2 <- ggplot(gslwp_subset_Ruta, aes(MeanLWP_negMPa, MeanGs_mol, color
 
 #reverse order of x axis and reset x axis scale
 plot_Ruta_Sp3 <- plot_Ruta_Sp2 +scale_x_continuous(trans = "reverse", breaks = unique(gslwp_subset_Ruta$MeanLWP_negMPa))
-plot_Ruta_Sp5
+plot_Ruta_Sp3
 
 #packge "scales" to access break formatting functions
 library(scales)
@@ -69,3 +69,30 @@ plot_Ruta_Sp6
 #add title
 plot_Ruta_Sp6 <- plot_Ruta_Sp6 + ggtitle("Stomatal conductance as a function of leaf water potential during the spring 2017 dry season \nSpecies in the Rutaceae family")
 plot_Ruta_Sp6
+
+#produce scatterplot for Boraginaceae only with smooth local regression ("loess" used as useful for small number of observations)
+#first, add column for LWP in MPa in main Spring dataframe 
+gslwp_spring$MeanLWP_negMPa <- gslwp_spring$MeanLWP_neg /10
+gslwp_spring$MeanLWP_negMPa <- NULL
+gslwp
+View(gslwp_spring)
+
+#subset Boraginaceae family
+gslwp_subset_Borag <- subset(gslwp_spring, Family %in% c("Boraginaceae")==TRUE)
+View(gslwp_subset_Borag)
+
+#create scatterplot
+plot_Borag_Sp <- ggplot(gslwp_subset_Borag, aes(MeanLWP_negMPa, MeanGs_mol, color = Species)) + geom_point() +
+  geom_smooth(se=F)
+plot_Borag_Sp
+
+#reverse x axis and reset y and x axis values
+plot_Borag_Sp2 <- plot_Borag_Sp + scale_x_continuous(trans = "reverse", breaks = waiver())
+plot_Borag_Sp2 <- plot_Borag_Sp2 + xlim(0, -7)
+plot_Borag_Sp2 <- plot_Borag_Sp2 + ylim(0, 1)
+
+#change axis labels and add title
+plot_Borag_Sp2 <- plot_Borag_Sp2 +xlab("Mean leaf water potential (MPa)")
+plot_Borag_Sp2 <- plot_Borag_Sp2 +ylab("Mean stomatal conductance (mol m-2 s-1)")
+plot_Borag_Sp3 <- plot_Borag_Sp2 + ggtitle("Stomatal conductance as a function of leaf water potential during the spring 2017 dry season \nSpecies in the Boraginaceae family")
+plot_Borag_Sp3
