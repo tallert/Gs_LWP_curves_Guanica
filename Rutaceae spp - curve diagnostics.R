@@ -25,10 +25,10 @@ plot2 <- ggplot(gslwp, aes(x=MeanLWP_neg, y=MeanGs_mol, color = Species, shape =
   geom_point()
 plot2
 
-#extract "Spring17" data into new dataframe
+#extract "Spring17" data into new dataframe.
 gslwp_spring <- gslwp %>% filter(Season == "Spring17")
-View(gslwp_spring)
-str(gslwp_spring)
+View(gslwp_spring).
+str(gslwp_spring).
 
 #preliminary scatterplot for raw mean Gs as a function of raw mean LWP. SPRING ONLY
 plot2 <- ggplot(gslwp_spring, aes(x=MeanLWP_neg, y=MeanGs_mol, color = Species)) +geom_point()
@@ -38,14 +38,14 @@ plot2
 gslwp_subset_Ruta <- subset(gslwp_spring, Family %in% c("Rutaceae")==TRUE)
 
 plot_Ruta_Sp <- ggplot(gslwp_subset_Ruta, aes(MeanLWP_neg, MeanGs_mol, color=Species)) + geom_point() +
-  geom_smooth(se=F)
+  geom_smooth(se=F).
 plot_Ruta_Sp
 
 #convert LWP to MPa
 gslwp_subset_Ruta$MeanLWP_negMPa <- gslwp_subset_Ruta$MeanLWP_neg /10
 plot_Ruta_Sp2 <- ggplot(gslwp_subset_Ruta, aes(MeanLWP_negMPa, MeanGs_mol, color=Species)) +
-  geom_point() +
-  geom_smooth()
+  geom_point() + 
+geom_smooth()
 
 #reverse order of x axis and reset x axis scale
 plot_Ruta_Sp3 <- plot_Ruta_Sp2 +scale_x_continuous(trans = "reverse", breaks = unique(gslwp_subset_Ruta$MeanLWP_negMPa))
